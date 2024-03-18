@@ -71,13 +71,13 @@ app.delete("/delete/:id",async function(req,res){
 });
 
 app.post("/register",async (req, res)=>{
-    const {email,password} = req.body;
+    const {username,email,password} = req.body;
     
     const userfind=await client.db("CRUD").collection("registerdata").findOne({email:email});
     if (!userfind){
     const salt=await bcrypt.genSalt(10);
     const encrypt=await bcrypt.hash(password,salt);
-    const registerData = await client.db("CRUD").collection("registerdata").insertOne({email:email,password:encrypt});
+    const registerData = await client.db("CRUD").collection("registerdata").insertOne({name:username,email:email,password:encrypt});
     res.status(201).send(registerData);
     
     }
@@ -98,11 +98,11 @@ app.post('/login', async(req, res) => {
        res.status(200).send({token:token});
     }
     else{
-        res.status(400).send("Not a verified user");
+        res.status(400).send({message:"Not a verified user"});
     }
     }
     else{
-        res.status(400).send("user not found");
+        res.status(400).send({message:"user not found"});
 }
 });
 
